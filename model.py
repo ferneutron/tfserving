@@ -6,6 +6,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import os
 import subprocess
+import tempfile
 
 fashion_mnist = keras.datasets.fashion_mnist
 (train_images, train_labels), (test_images, test_labels) = fashion_mnist.load_data()
@@ -39,4 +40,17 @@ model.fit(train_images, train_labels, epochs=epochs)
 
 test_loss, test_acc = model.evaluate(test_images, test_labels)
 
-model.export("exported_model")
+MODEL_DIR = tempfile.gettempdir()
+version = 1
+export_path = os.path.join(MODEL_DIR, str(version))
+print(f"Exported path: {export_path}")
+
+# tf.keras.models.save_model(model, export_path)
+
+model.export(export_path)
+
+
+nohup tensorflow_model_server \
+  --rest_api_port=8501 \
+  --model_name=saved_model \
+  --model_base_path="/tmp/1" >server.log 2>&1
