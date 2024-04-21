@@ -16,5 +16,5 @@ RUN sudo wget 'http://storage.googleapis.com/tensorflow-serving-apt/pool/tensorf
     sudo dpkg -i tensorflow-model-server_2.8.0_all.deb
 
 # Install Python packages together
-RUN pip install --upgrade pip
-RUN pip install matplotlib tensorflow requests tensorflow-serving-api==2.8.0 
+RUN sudo pip install --upgrade pip
+RUN sudo pip install matplotlib tensorflow requests tensorflow-serving-api==2.8.0 
