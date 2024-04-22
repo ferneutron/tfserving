@@ -1,9 +1,14 @@
+import os
+import tempfile
 import pandas as pd 
 import tensorflow as tf 
 
 EPOCHS = 10
 BATCH_SIZE = 32
 BUFFER_SIZE = 1000
+
+MODEL_DIR = tempfile.gettempdir()
+MODEL_VERSION = "1"
 
 def load_dataset():
     df = pd.read_csv("train.csv")
@@ -14,7 +19,7 @@ def load_dataset():
     return batches
 
 
-def get_model():
+def build_model():
     model = tf.keras.Sequential([
         tf.keras.layers.Dense(10, activation='relu'),
         tf.keras.layers.Dropout(0.5),
@@ -28,10 +33,18 @@ def get_model():
                 metrics=['accuracy'])
     return model
 
-
 if __name__ == "__main__":
+    # Load dataset
     batches = load_dataset()
 
-    model = get_model()
+    # Build model
+    model = build_model()
     model.summary()
-    model.fit(batches, epochs=15, batch_size=BATCH_SIZE)
+
+    # Train
+    model.fit(batches, epochs=EPOCHS, batch_size=BATCH_SIZE)
+
+    # Save model
+    export_path = os.path.join(MODEL_DIR, MODEL_VERSION)
+    model.export(export_path)
+    print(f"Model exported at: {export_path}")
