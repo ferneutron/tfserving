@@ -4,7 +4,7 @@ import pandas as pd
 def load_dataset():
     df = pd.read_csv("train.csv")
     target = df.pop("target")
-    return tf.data.Dataset.from_tensor_slices((dict(df), target))
+    return tf.data.Dataset.from_tensor_slices((df, target))
 
 def build_model():
     model = tf.keras.Sequential([
@@ -16,21 +16,43 @@ def build_model():
     return model
 
 
+def get_basic_model():
+    model = tf.keras.Sequential([
+        tf.keras.layers.Dense(10, activation='relu'),
+        tf.keras.layers.Dense(10, activation='relu'),
+        tf.keras.layers.Dense(1)
+        ])
+
+    model.compile(optimizer='adam',
+                loss=tf.keras.losses.BinaryCrossentropy(from_logits=True),
+                metrics=['accuracy'])
+    return model
+
+
+def stack_dict(inputs, fun=tf.stack):
+    values = []
+    for key in sorted(inputs.keys()):
+      values.append(tf.cast(inputs[key], tf.float32))
+
+    return fun(values, axis=-1)
+
+
 def build_model_v2():
 
     inputs = {}
     for name in ["feature_0", "feature_1", "feature_2", "feature_3", "feature_4", "feature_5", "feature_6", "feature_7", "feature_8", "feature_9"]:
-        inputs[name] = tf.keras.Input(
-            shape=(1,), name=name, dtype=tf.float32)
+        inputs[name] = tf.keras.Input(shape=(1,), name=name, dtype=tf.float32)
 
-    # Define the model inputs
-    # inputs = tf.keras.Input(shape=(10,))
+    values = []
+    for key in sorted(inputs.keys()):
+        values.append(tf.cast(inputs[key], tf.float32))
 
-    # Add hidden layers with ReLU activation
-    x = tf.keras.layers.Dense(32, activation="relu")(inputs)
+    x = tf.stack
+    x = stack_dict(inputs, fun=tf.concat)
+
+    x = tf.keras.layers.Dense(32, activation="relu")(x)
     x = tf.keras.layers.Dense(16, activation="relu")(x)
 
-    # Output layer with sigmoid activation for binary classification
     outputs = tf.keras.layers.Dense(1, activation="sigmoid")(x)
 
     # Create the model
@@ -39,8 +61,8 @@ def build_model_v2():
 
 if __name__ == "__main__":
     dataset = load_dataset()
-    model = build_model_v2()
+    numeric_batches = dataset.shuffle(1000).batch(32)
 
-    model.compile(loss="binary_crossentropy", optimizer="adam", metrics=["accuracy"])
+    model = get_basic_model()
     model.summary()
-    model.fit(dataset, epochs=2)
+    model.fit(numeric_batches, epochs=15, batch_size=32)
