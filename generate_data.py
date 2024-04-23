@@ -2,29 +2,37 @@ import pandas as pd
 from sklearn.datasets import make_classification
 from sklearn.model_selection import train_test_split
 
-# Define the number of samples (data points)
-n_samples = 5000
 
-# Define the number of features
-n_features = 10
+N_SAMPLES = 5000       # Define the number of samples (data points)
+N_FEATURES = 10        # Define the number of features
+N_CLASSES = 2          # Set the number of classes (binary classification = 2)
+TEST_SIZE = 0.2        # Sie of test set
+SEED = 42
 
-# Set the number of classes (binary classification = 2)
-n_classes = 2
+def generate_data():
 
-# Generate the data and target labels
-x, y = make_classification(n_samples=n_samples, n_features=n_features, n_classes=n_classes)
+    x, y = make_classification(
+        n_samples=N_SAMPLES, 
+        n_features=N_FEATURES, 
+        n_classes=N_CLASSES)
 
-x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=42)
+    x_train, x_test, y_train, y_test = train_test_split(
+        x=x, 
+        y=y, 
+        test_size=TEST_SIZE, 
+        random_state=SEED)
 
-df_train = pd.DataFrame(x_train, columns=[f"feature_{i}" for i in range(n_features)])
-df_train["target"] = y_train
+    df_train = pd.DataFrame(x_train, columns=[f"feature_{i}" for i in range(n_features)])
+    df_train["target"] = y_train
 
-df_test = pd.DataFrame(x_test, columns=[f"feature_{i}" for i in range(n_features)])
-df_test["target"] = y_test
+    df_test = pd.DataFrame(x_test, columns=[f"feature_{i}" for i in range(n_features)])
+    df_test["target"] = y_test
 
-print(f"Train: {df_train.shape}")
-print(f"Test: {df_test.shape}")
+    print(f"Train: {df_train.shape}")
+    print(f"Test: {df_test.shape}")
 
-# df_train.to_csv("train.csv", index=False)
-# df_test.to_csv("test.csv", index=False)
+    df_train.to_csv("train.csv", index=False)
+    df_test.to_csv("test.csv", index=False)
 
+if __name__ == '__main__':
+    generate_data()
