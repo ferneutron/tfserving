@@ -19,7 +19,9 @@ RUN sudo wget 'http://storage.googleapis.com/tensorflow-serving-apt/pool/tensorf
 RUN sudo pip install --upgrade pip
 RUN sudo pip install matplotlib \
                      requests \
-                     #sklearn \
+                     scikit-learn \
                      pandas \
                      tensorflow \
-                     tensorflow-serving-api==2.8.0 
+                     tensorflow-serving-api==2.8.0  \
+                     protobuf==3.20.* \
+                     tensorflow_serving_api
