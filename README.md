@@ -13,7 +13,8 @@ $ docker build -t tfserving:v1 .
 
 ### Step 2.
 Run the container and access it through the shell. 
-Note: It is recommended that you mount the current directory so that you have access to the python scripts.
+
+**Note**: It is recommended that you mount the current directory so that you have access to the python scripts.
 If you want to skip mounting the current directory, you will have to modify `Dockerfile` to add `COPY` commands to move scripts from the image build.
 
 ```bash
@@ -21,8 +22,35 @@ $ docker run -it -v $PWD:/home/app/ tfserving:v1 /bin/bash
 ```
 
 ### Step 3. 
-Una vez estes dentro del contenedor, genera los archivos `train.csv` y `test.csv`, corriendo el script `generate_data.py`.
+Once you are inside the container, generate the `train.csv` and `test.csv` files, running the `generate_data.py` script.
 
 ```bash
 $ python -B generate_data.py
+```
+
+### Step 4.
+Train and export the model.
+
+```bash
+$ python -B train.py
+```
+
+### Step 5.
+Launch `TFServing` server.
+
+```bash
+$ tensorflow_model_server --port=8500 --rest_api_port=8501 --model_name=saved_model --model_base_path="/tmp"
+```
+
+**Note**: Port `8500` will be used for `gRPC` calls while port `8501` will be used for `REST` requests.
+
+### Step 6.
+`REST` and `gRPC` requests. 
+
+```bash
+$ python -B inference_rest.py
+```
+
+```bash
+$ python -B inference_grpc.py
 ```
