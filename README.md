@@ -1,7 +1,7 @@
 # Model Deployment with TFServing
 This repository contains code to train, export and serve a `Tensorflow` model with `TFServing`. Additionally, this repository provides the installation and configuration of `TFServing` through a `Docker` image.
 
-## How to use it?
+## How to use it?
 It is recommended to follow the step by step described below. However, you can adapt the code to your needs.
 
 ### Step 1.
