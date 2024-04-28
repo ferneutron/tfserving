@@ -17,15 +17,15 @@ def generate_data():
         n_classes=N_CLASSES)
 
     x_train, x_test, y_train, y_test = train_test_split(
-        x=x, 
-        y=y, 
+        x, 
+        y, 
         test_size=TEST_SIZE, 
         random_state=SEED)
 
-    df_train = pd.DataFrame(x_train, columns=[f"feature_{i}" for i in range(n_features)])
+    df_train = pd.DataFrame(x_train, columns=[f"feature_{i}" for i in range(N_FEATURES)])
     df_train["target"] = y_train
 
-    df_test = pd.DataFrame(x_test, columns=[f"feature_{i}" for i in range(n_features)])
+    df_test = pd.DataFrame(x_test, columns=[f"feature_{i}" for i in range(N_FEATURES)])
     df_test["target"] = y_test
 
     print(f"Train: {df_train.shape}")

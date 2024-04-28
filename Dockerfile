@@ -1,6 +1,5 @@
 FROM python:3.10-slim
 
-# Combine updates and installations of system packages 
 RUN apt-get update && \
     apt-get install -y sudo curl gnupg wget && \
     useradd -ms /bin/bash app && \
@@ -22,5 +21,4 @@ RUN sudo pip install requests \
                      scikit-learn \
                      protobuf==3.20.* \
                      tensorflow \
-                     tensorflow-serving-api==2.8.0  \
-                     tensorflow_serving_api
+                     tensorflow-serving-api==2.8.0
